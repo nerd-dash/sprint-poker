@@ -86,11 +86,11 @@ Development must prioritize simplicity:
 
 All development must follow incremental practices:
 
+- Create feature branches for each task before starting implementation (never push code directly to main branch)
 - Create small, focused commits during implementation (maximum 20 files or 2000 lines per commit, excluding markdown and mocks)
 - When a feature or feature part is complete, create pull requests for review
 - Pull requests must be reviewed and approved before merging
 - Commits should represent logical units of work with clear, descriptive messages
-- Feature branches should be used for development work
 
 **Rationale**: Incremental development enables better code review, reduces merge conflicts, and maintains code quality through regular feedback.
 
