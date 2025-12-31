@@ -103,6 +103,17 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 - **Verification**: Dependency audit in code review
 - **Status**: ✅ COMPLIANT - Clean architecture separates concerns
 
+### ✅ Principle VII: Incremental Development and Code Review
+
+- **Requirement**: Small commits, pull requests for feature completion (max 20 files or 2000 lines, excluding markdown and mocks)
+- **Implementation Strategy**:
+  - Create focused commits during implementation
+  - Use feature branches for development
+  - Create PRs when features/parts are complete
+  - Review and approve PRs before merging
+- **Verification**: Git history analysis, PR review process
+- **Status**: ✅ COMPLIANT - Workflow will enforce incremental development
+
 ## Project Structure
 
 ### Documentation (this feature)

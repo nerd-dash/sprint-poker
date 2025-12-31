@@ -82,10 +82,22 @@ Development must prioritize simplicity:
 
 **Rationale**: Simplicity enables learning, framework portability, and long-term maintainability.
 
+### VII. Incremental Development and Code Review
+
+All development must follow incremental practices:
+
+- Create small, focused commits during implementation (maximum 20 files or 2000 lines per commit, excluding markdown and mocks)
+- When a feature or feature part is complete, create pull requests for review
+- Pull requests must be reviewed and approved before merging
+- Commits should represent logical units of work with clear, descriptive messages
+- Feature branches should be used for development work
+
+**Rationale**: Incremental development enables better code review, reduces merge conflicts, and maintains code quality through regular feedback.
+
 ## Development Workflow
 
 - All changes must pass automated tests before merge
-- Code reviews must verify compliance with principles I-VI
+- Code reviews must verify compliance with principles I-VII
 - Breaking changes to session behavior require explicit justification
 - Performance regressions (>10% slower) must be explained and approved
 
@@ -98,4 +110,4 @@ This constitution supersedes all other development practices. Amendments require
 3. Version increment following semantic versioning
 4. Update to related templates and documentation
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-31 | **Last Amended**: 2025-12-31
+**Version**: 1.1.0 | **Ratified**: 2025-12-31 | **Last Amended**: 2025-12-31
