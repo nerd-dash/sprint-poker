@@ -5,6 +5,7 @@ A lightweight, real-time web application for Scrum team estimation meetings usin
 ## 🎯 Overview
 
 Sprint Poker enables Scrum teams to conduct efficient estimation sessions where:
+
 - **Facilitators** create sessions and invite participants via shareable URLs
 - **Participants** join sessions and submit estimates privately
 - **Real-time voting** with simultaneous reveal to avoid anchoring bias
@@ -13,6 +14,7 @@ Sprint Poker enables Scrum teams to conduct efficient estimation sessions where:
 ## ✨ Features
 
 ### Core Functionality
+
 - **Session Creation**: Generate unique session URLs for team estimation
 - **Participant Joining**: Join sessions via shared links with display name
 - **Concealed Voting**: Private voting using Fibonacci sequence (0, 1, 2, 3, 5, 8, 13, 21)
@@ -20,6 +22,7 @@ Sprint Poker enables Scrum teams to conduct efficient estimation sessions where:
 - **Session Management**: Clear votes, manage participants, automatic cleanup
 
 ### Technical Features
+
 - **Real-time Communication**: WebSocket-based updates with <500ms latency
 - **Mobile Responsive**: Works on all devices (320px+ screens)
 - **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
@@ -29,23 +32,27 @@ Sprint Poker enables Scrum teams to conduct efficient estimation sessions where:
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 20+
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/nerd-dash/sprint-poker.git
 cd sprint-poker
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Start development server:
+
 ```bash
 npm start
 ```
@@ -61,13 +68,15 @@ npm run build
 ## 🏗️ Architecture
 
 ### Tech Stack
+
 - **Frontend**: Angular 21 (latest) with SSR, TypeScript, Angular Material
 - **Backend**: Node.js with Express + Socket.IO (unified SSR server)
 - **State Management**: NGRX SignalStore (modern Angular signals)
-- **Testing**: Jasmine/Karma (unit), Playwright (E2E)
+- **Testing**: Angular test runner (Vitest-backed) for unit tests, Playwright (Chrome-only) for E2E
 - **Styling**: SCSS with custom design system
 
 ### Project Structure
+
 ```
 src/
 ├── app/
@@ -82,16 +91,19 @@ src/
 ## 🧪 Testing
 
 ### Unit Tests
+
 ```bash
 npm test
 ```
 
 ### End-to-End Tests
+
 ```bash
 npm run e2e
 ```
 
 ### Test Coverage
+
 - Unit tests: 80%+ coverage required
 - Integration tests for WebSocket flows
 - E2E tests for critical user journeys
@@ -101,6 +113,7 @@ npm run e2e
 This project follows strict development principles:
 
 ### Constitution Principles
+
 1. **Privacy by Design**: Zero persistent storage
 2. **Code Quality**: Max complexity 5, TypeScript strict mode
 3. **TDD Mandatory**: Tests before implementation
@@ -110,11 +123,13 @@ This project follows strict development principles:
 7. **Incremental Development**: Small commits, feature branches, PR reviews
 
 ### Branching Strategy
+
 - `main`: Production-ready code
 - `feature/TXXX-description`: Feature branches for each task
 - Create PRs when features are complete (max 20 files or 2000 lines)
 
 ### Commit Guidelines
+
 - Small, focused commits (max 20 files or 2000 lines)
 - Clear, descriptive commit messages
 - Logical units of work
@@ -122,6 +137,7 @@ This project follows strict development principles:
 ## 📚 Documentation
 
 Complete project documentation is available in `specs/001-poker-session-app/`:
+
 - `spec.md`: Feature specifications and user stories
 - `plan.md`: Implementation plan and architecture decisions
 - `data-model.md`: Domain models and validation rules

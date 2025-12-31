@@ -10,7 +10,7 @@
 - npm 10+ (comes with Node.js)
 - Git
 - Code editor (VS Code recommended)
-- Modern web browser (Chrome, Firefox, Safari, or Edge - last 2 versions)
+- Google Chrome (only supported browser)
 
 ## Initial Setup
 
@@ -91,13 +91,13 @@ App runs on `http://localhost:4200` but WebSocket features won't work without SS
 
 ### Running Tests
 
-#### Unit Tests (Jasmine/Karma)
+#### Unit Tests (Angular default runner)
 
 ```bash
 npm test
 ```
 
-Runs unit tests with coverage report. Must maintain 80%+ coverage per constitution.
+Runs unit tests via `ng test` (Angular 21 uses Vitest under the hood). Must maintain 80%+ coverage per constitution.
 
 #### E2E Tests (Playwright)
 
@@ -189,23 +189,23 @@ Navigate to `http://localhost:4200`
 **File**: `src/app/core/services/websocket.service.ts`
 
 ```typescript
-import { Injectable } from "@angular/core";
-import { io, Socket } from "socket.io-client";
+import { Injectable } from '@angular/core';
+import { io, Socket } from 'socket.io-client';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class WebSocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io("http://localhost:4200", {
-      transports: ["websocket", "polling"],
+    this.socket = io('http://localhost:4200', {
+      transports: ['websocket', 'polling'],
       reconnection: true,
     });
   }
 
   createSession(name: string): Promise<CreateSessionResponse> {
     return new Promise((resolve) => {
-      this.socket.emit("createSession", { facilitatorName: name }, resolve);
+      this.socket.emit('createSession', { facilitatorName: name }, resolve);
     });
   }
 
@@ -218,7 +218,7 @@ export class WebSocketService {
 **File**: `src/app/features/session/session.store.ts`
 
 ```typescript
-import { signalStore, withState, withMethods, patchState } from "@ngrx/signals";
+import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 
 interface SessionState {
   sessionId: string | null;
@@ -228,7 +228,7 @@ interface SessionState {
 }
 
 export const SessionStore = signalStore(
-  { providedIn: "root" },
+  { providedIn: 'root' },
   withState<SessionState>({
     /* initial state */
   }),
@@ -245,14 +245,14 @@ export const SessionStore = signalStore(
 **File**: `src/server/websocket/socket-handler.ts`
 
 ```typescript
-import { Server, Socket } from "socket.io";
-import { sessionStore } from "./session-store";
+import { Server, Socket } from 'socket.io';
+import { sessionStore } from './session-store';
 
 export function setupSocketHandlers(io: Server) {
-  io.on("connection", (socket: Socket) => {
-    console.log("Client connected:", socket.id);
+  io.on('connection', (socket: Socket) => {
+    // Privacy guardrail: do not log socket IDs, session IDs, display names, or votes.
 
-    socket.on("createSession", (data, callback) => {
+    socket.on('createSession', (data, callback) => {
       const sessionId = sessionStore.createSession(socket.id);
       callback({ success: true, sessionId });
     });
@@ -270,7 +270,7 @@ export function setupSocketHandlers(io: Server) {
 
 ```typescript
 // vote-calculator.spec.ts
-it("should calculate median vote", () => {
+it('should calculate median vote', () => {
   const votes = [1, 2, 3, 5, 8];
   expect(calculateMedian(votes)).toBe(3);
 });
@@ -289,9 +289,7 @@ npm test
 export function calculateMedian(votes: number[]): number {
   const sorted = [...votes].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 === 0
-    ? (sorted[mid - 1] + sorted[mid]) / 2
-    : sorted[mid];
+  return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
 }
 ```
 
@@ -323,8 +321,8 @@ Edit `src/app/app.routes.ts`:
 
 ```typescript
 export const routes: Routes = [
-  { path: "", component: HomeComponent },
-  { path: "session/:id", component: SessionComponent },
+  { path: '', component: HomeComponent },
+  { path: 'session/:id', component: SessionComponent },
   // Add new route here
 ];
 ```
@@ -342,14 +340,14 @@ export const routes: Routes = [
 
 ```typescript
 // In browser console
-const socket = io("http://localhost:4200", {
-  transports: ["websocket"],
+const socket = io('http://localhost:4200', {
+  transports: ['websocket'],
   debug: true,
 });
 
-socket.on("connect", () => console.log("Connected"));
-socket.on("disconnect", () => console.log("Disconnected"));
-socket.on("error", (err) => console.error("Error:", err));
+socket.on('connect', () => console.log('Connected'));
+socket.on('disconnect', () => console.log('Disconnected'));
+socket.on('error', (err) => console.error('Error:', err));
 ```
 
 ### Check Session Store
@@ -357,7 +355,7 @@ socket.on("error", (err) => console.error("Error:", err));
 Add debug endpoint in `src/server/server.ts`:
 
 ```typescript
-app.get("/debug/sessions", (req, res) => {
+app.get('/debug/sessions', (req, res) => {
   res.json({
     count: sessionStore.getSessionCount(),
     sessions: sessionStore.getAllSessions(),
@@ -384,7 +382,7 @@ Edit `src/environments/environment.development.ts`:
 ```typescript
 export const environment = {
   production: false,
-  websocketUrl: "http://localhost:4200",
+  websocketUrl: 'http://localhost:4200',
   sessionTimeout: 3600000, // 1 hour
   maxParticipants: 20,
 };
@@ -397,7 +395,7 @@ Edit `src/environments/environment.ts`:
 ```typescript
 export const environment = {
   production: true,
-  websocketUrl: "https://your-domain.com",
+  websocketUrl: 'https://your-domain.com',
   sessionTimeout: 3600000,
   maxParticipants: 20,
 };
@@ -464,9 +462,9 @@ Add timing in client:
 
 ```typescript
 const start = Date.now();
-socket.emit("submitVote", data, (response) => {
+socket.emit('submitVote', data, (response) => {
   const latency = Date.now() - start;
-  console.log("Latency:", latency, "ms");
+  console.log('Latency:', latency, 'ms');
   // Should be < 500ms per constitution
 });
 ```

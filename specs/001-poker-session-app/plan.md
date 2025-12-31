@@ -18,10 +18,10 @@ Building a real-time Planning Poker web application using Angular (latest with S
 - Backend (SSR Server): @angular/ssr, socket.io, express
   **Storage**: In-memory only (Map/Set data structures on Node server)  
   **Testing**:
-- Unit: Jasmine/Karma (Angular default)
-- Integration: Playwright for E2E
-- WebSocket: socket.io-client-mock for testing
-  **Target Platform**: Web (Desktop + Mobile browsers, Chrome/Firefox/Safari/Edge last 2 versions)  
+- Unit: Vitest
+- E2E: Playwright
+- WebSocket: Integration tests using real Socket.IO server + socket.io-client (avoid brittle mocks)
+  **Target Platform**: Web (Google Chrome only)  
   **Project Type**: Web application (Angular SSR - unified frontend/backend in single project)  
   **Performance Goals**:
 - Initial page load < 2s on 3G
@@ -68,7 +68,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
   - Write component tests before component implementation
   - Integration tests for WebSocket flows
   - Coverage enforced in CI
-- **Verification**: Jest/Karma coverage reports + CI pipeline blocks on <80%
+- **Verification**: Angular test runner (Vitest-backed) coverage reports + CI pipeline blocks on <80%
 - **Status**: ✅ COMPLIANT - TDD workflow enforced
 
 ### ✅ Principle IV: User Experience Consistency
@@ -290,6 +290,7 @@ sprint-poker/
 - Frontend: `src/app/` (Angular components, services, stores)
 - Backend: `src/server/` (Express + Socket.IO handlers)
 - Tests: `tests/` (e2e, integration)
+- Tests: `tests/` (e2e, integration)
 
 ### Constitution Re-Check
 
@@ -339,30 +340,20 @@ Phase 2 is handled by the `/speckit.tasks` command (not part of `/speckit.plan`)
 
 ### 1. Socket.IO Server Integration
 
-**Decision**: Create custom server wrapper that imports Angular server
+**Decision**: Extend Angular SSR server entrypoint to attach Socket.IO
 
 **Approach**:
 
-- Create `src/server/server.ts` that wraps Angular's SSR application
-- Attach Socket.IO to the Express instance before Angular handles routes
-- Preserves Angular SSR functionality while adding WebSocket support
+- Use the existing SSR entrypoint `src/server.ts` (configured via `angular.json`)
+- Attach Socket.IO to the HTTP server/Express app before SSR route handling
+- Preserve Angular SSR functionality while adding real-time communication
 
 **Implementation Pattern**:
 
 ```typescript
-// src/server/server.ts
-import { app } from "./app"; // Angular SSR app
-import { createServer } from "http";
-import { Server } from "socket.io";
-import { setupSocketHandlers } from "./websocket/socket-handler";
-
-const server = createServer(app);
-const io = new Server(server);
-
-setupSocketHandlers(io);
-
-const PORT = process.env["PORT"] || 4200;
-server.listen(PORT);
+// src/server.ts
+// Pseudocode: actual implementation depends on Angular SSR bootstrap code.
+// Key requirement: attach Socket.IO without logging session metadata.
 ```
 
 ### 2. Heartbeat/Connection Tracking
@@ -372,9 +363,9 @@ server.listen(PORT);
 **Configuration**:
 
 - Socket.IO automatically sends ping frames every 25 seconds (default)
-- Server marks client disconnected if no pong received within 20 seconds
+- Use a 30-second participant grace period (spec.md) for presence removal
 - No custom heartbeat event needed
-- Update `lastSeen` timestamp on any message from client (not separate heartbeat)
+- Update participant `lastSeen` timestamp on any message from client (not separate heartbeat)
 
 **Server Configuration**:
 
@@ -384,6 +375,16 @@ const io = new Server(server, {
   pingInterval: 25000, // 25s between ping frames
 });
 ```
+
+### 4. Privacy Guardrails (Constitution Principle I)
+
+**Requirement**: Do not persist or log session metadata (session IDs, socket IDs, display names, votes).
+
+**Implementation Guidance**:
+
+- Do not use `console.log` for connection/session lifecycle events.
+- If operational logging is needed, log only coarse, non-identifying events (e.g., "socket connected") without IDs.
+- Never include session identifiers in error messages shown to users beyond what is already present in the URL.
 
 ### 3. Rate Limiting Configuration
 
