@@ -15,17 +15,17 @@ This document defines all WebSocket events (client→server and server→client)
 
 ```typescript
 // Client initiates connection
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
 
-const socket = io("http://localhost:4200", {
-  transports: ["websocket", "polling"],
+const socket = io('http://localhost:4200', {
+  transports: ['websocket', 'polling'],
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionAttempts: 5,
 });
 
-socket.on("connect", () => {
-  console.log("Connected:", socket.id);
+socket.on('connect', () => {
+  // Connected. Privacy guardrail: do not log socket IDs, session IDs, display names, or votes.
 });
 ```
 
@@ -69,15 +69,11 @@ interface CreateSessionResponse {
 **Example**:
 
 ```typescript
-socket.emit(
-  "createSession",
-  { facilitatorName: "Alice" },
-  (response: CreateSessionResponse) => {
-    if (response.success) {
-      console.log("Session created:", response.sessionId);
-    }
+socket.emit('createSession', { facilitatorName: 'Alice' }, (response: CreateSessionResponse) => {
+  if (response.success) {
+    // Handle success (e.g., navigate to response.sessionUrl). Avoid logging session IDs.
   }
-);
+});
 ```
 
 ---
@@ -138,11 +134,11 @@ interface JoinSessionResponse {
 
 ```typescript
 socket.emit(
-  "joinSession",
-  { sessionId: "V1StGXR8_Z5", displayName: "Bob" },
+  'joinSession',
+  { sessionId: 'V1StGXR8_Z5', displayName: 'Bob' },
   (response: JoinSessionResponse) => {
     if (response.success) {
-      console.log("Joined as:", response.participant);
+      // Handle success (e.g., render participant list). Avoid logging participant/session identifiers.
     }
   }
 );
@@ -189,11 +185,11 @@ interface SubmitVoteResponse {
 
 ```typescript
 socket.emit(
-  "submitVote",
-  { sessionId: "V1StGXR8_Z5", value: 5 },
+  'submitVote',
+  { sessionId: 'V1StGXR8_Z5', value: 5 },
   (response: SubmitVoteResponse) => {
     if (response.success) {
-      console.log("Vote submitted");
+      // Update UI state.
     }
   }
 );
@@ -235,11 +231,11 @@ interface RevealVotesResponse {
 
 ```typescript
 socket.emit(
-  "revealVotes",
-  { sessionId: "V1StGXR8_Z5", force: true },
+  'revealVotes',
+  { sessionId: 'V1StGXR8_Z5', force: true },
   (response: RevealVotesResponse) => {
     if (response.success) {
-      console.log("Votes revealed");
+      // Update UI state.
     }
   }
 );
@@ -278,15 +274,11 @@ interface ClearVotesResponse {
 **Example**:
 
 ```typescript
-socket.emit(
-  "clearVotes",
-  { sessionId: "V1StGXR8_Z5" },
-  (response: ClearVotesResponse) => {
-    if (response.success) {
-      console.log("Votes cleared");
-    }
+socket.emit('clearVotes', { sessionId: 'V1StGXR8_Z5' }, (response: ClearVotesResponse) => {
+  if (response.success) {
+    console.log('Votes cleared');
   }
-);
+});
 ```
 
 ---
@@ -345,7 +337,7 @@ interface ParticipantJoinedEvent {
 **Example**:
 
 ```typescript
-socket.on("participantJoined", (data: ParticipantJoinedEvent) => {
+socket.on('participantJoined', (data: ParticipantJoinedEvent) => {
   console.log(`${data.participant.displayName} joined`);
   // Update participant list in UI
 });
@@ -365,7 +357,7 @@ socket.on("participantJoined", (data: ParticipantJoinedEvent) => {
 interface ParticipantLeftEvent {
   participantId: string;
   displayName: string;
-  reason: "disconnect" | "timeout";
+  reason: 'disconnect' | 'timeout';
   totalParticipants: number;
 }
 ```
@@ -375,7 +367,7 @@ interface ParticipantLeftEvent {
 **Example**:
 
 ```typescript
-socket.on("participantLeft", (data: ParticipantLeftEvent) => {
+socket.on('participantLeft', (data: ParticipantLeftEvent) => {
   console.log(`${data.displayName} left (${data.reason})`);
   // Remove from participant list in UI
 });
@@ -407,7 +399,7 @@ interface VoteSubmittedEvent {
 **Example**:
 
 ```typescript
-socket.on("voteSubmitted", (data: VoteSubmittedEvent) => {
+socket.on('voteSubmitted', (data: VoteSubmittedEvent) => {
   console.log(`${data.votedCount}/${data.totalParticipants} voted`);
   // Update participant list to show checkmark
 });
@@ -446,9 +438,9 @@ interface VotesRevealedEvent {
 **Example**:
 
 ```typescript
-socket.on("votesRevealed", (data: VotesRevealedEvent) => {
-  console.log("Votes:", data.votes);
-  console.log("Average:", data.statistics.average);
+socket.on('votesRevealed', (data: VotesRevealedEvent) => {
+  console.log('Votes:', data.votes);
+  console.log('Average:', data.statistics.average);
   // Display results in UI
 });
 ```
@@ -474,8 +466,8 @@ interface VotesClearedEvent {
 **Example**:
 
 ```typescript
-socket.on("votesCleared", (data: VotesClearedEvent) => {
-  console.log("Starting new round");
+socket.on('votesCleared', (data: VotesClearedEvent) => {
+  console.log('Starting new round');
   // Reset voting UI, clear results
 });
 ```
@@ -493,7 +485,7 @@ socket.on("votesCleared", (data: VotesClearedEvent) => {
 ```typescript
 interface SessionExpiredEvent {
   sessionId: string;
-  reason: "inactivity";
+  reason: 'inactivity';
   message: string;
 }
 ```
@@ -503,8 +495,8 @@ interface SessionExpiredEvent {
 **Example**:
 
 ```typescript
-socket.on("sessionExpired", (data: SessionExpiredEvent) => {
-  console.log("Session expired:", data.message);
+socket.on('sessionExpired', (data: SessionExpiredEvent) => {
+  console.log('Session expired:', data.message);
   // Redirect to home page with notification
 });
 ```
@@ -539,7 +531,7 @@ interface ErrorEvent {
 **Example**:
 
 ```typescript
-socket.on("error", (data: ErrorEvent) => {
+socket.on('error', (data: ErrorEvent) => {
   console.error(`Error ${data.code}:`, data.message);
   // Show error notification in UI
 });
@@ -556,10 +548,10 @@ Sessions use Socket.IO rooms for efficient broadcasting:
 socket.join(`session:${sessionId}`);
 
 // Broadcast to all in session
-io.to(`session:${sessionId}`).emit("votesRevealed", data);
+io.to(`session:${sessionId}`).emit('votesRevealed', data);
 
 // Broadcast to all except sender
-socket.to(`session:${sessionId}`).emit("participantJoined", data);
+socket.to(`session:${sessionId}`).emit('participantJoined', data);
 ```
 
 ---
@@ -569,16 +561,16 @@ socket.to(`session:${sessionId}`).emit("participantJoined", data);
 ### Client Connection Lifecycle
 
 ```typescript
-socket.on("connect", () => {
+socket.on('connect', () => {
   // Connected, can now emit events
-  console.log("Connected");
+  console.log('Connected');
 });
 
-socket.on("disconnect", (reason) => {
+socket.on('disconnect', (reason) => {
   // Disconnected (network, server restart, etc.)
-  console.log("Disconnected:", reason);
+  console.log('Disconnected:', reason);
 
-  if (reason === "io server disconnect") {
+  if (reason === 'io server disconnect') {
     // Server forced disconnect (kicked)
     // Do not reconnect automatically
   } else {
@@ -587,22 +579,22 @@ socket.on("disconnect", (reason) => {
   }
 });
 
-socket.on("reconnect", (attemptNumber) => {
+socket.on('reconnect', (attemptNumber) => {
   // Successfully reconnected
-  console.log("Reconnected after", attemptNumber, "attempts");
+  console.log('Reconnected after', attemptNumber, 'attempts');
 
   // Re-join session if was in one
   if (currentSessionId) {
-    socket.emit("joinSession", {
+    socket.emit('joinSession', {
       sessionId: currentSessionId,
       displayName: currentUserName,
     });
   }
 });
 
-socket.on("reconnect_failed", () => {
+socket.on('reconnect_failed', () => {
   // All reconnection attempts failed
-  console.error("Could not reconnect");
+  console.error('Could not reconnect');
   showConnectionErrorMessage();
 });
 ```
@@ -629,20 +621,16 @@ socket.on("reconnect_failed", () => {
 ### Unit Test Example (Mock Socket)
 
 ```typescript
-describe("WebSocket Events", () => {
-  it("should handle vote submission", (done) => {
+describe('WebSocket Events', () => {
+  it('should handle vote submission', (done) => {
     const mockSocket = createMockSocket();
 
-    mockSocket.emit(
-      "submitVote",
-      { sessionId: "test", value: 5 },
-      (response) => {
-        expect(response.success).toBe(true);
-        done();
-      }
-    );
+    mockSocket.emit('submitVote', { sessionId: 'test', value: 5 }, (response) => {
+      expect(response.success).toBe(true);
+      done();
+    });
 
-    mockSocket.simulateServerResponse("submitVote", { success: true });
+    mockSocket.simulateServerResponse('submitVote', { success: true });
   });
 });
 ```
@@ -650,37 +638,26 @@ describe("WebSocket Events", () => {
 ### Integration Test Example (Real Socket)
 
 ```typescript
-describe("Session Flow", () => {
+describe('Session Flow', () => {
   let facilitatorSocket: Socket;
   let participantSocket: Socket;
 
   beforeAll(async () => {
-    facilitatorSocket = io("http://localhost:4200");
-    participantSocket = io("http://localhost:4200");
-    await Promise.all([
-      waitForConnection(facilitatorSocket),
-      waitForConnection(participantSocket),
-    ]);
+    facilitatorSocket = io('http://localhost:4200');
+    participantSocket = io('http://localhost:4200');
+    await Promise.all([waitForConnection(facilitatorSocket), waitForConnection(participantSocket)]);
   });
 
-  it("should create and join session", (done) => {
-    facilitatorSocket.emit(
-      "createSession",
-      { facilitatorName: "Alice" },
-      (response) => {
-        expect(response.success).toBe(true);
-        const sessionId = response.sessionId!;
+  it('should create and join session', (done) => {
+    facilitatorSocket.emit('createSession', { facilitatorName: 'Alice' }, (response) => {
+      expect(response.success).toBe(true);
+      const sessionId = response.sessionId!;
 
-        participantSocket.emit(
-          "joinSession",
-          { sessionId, displayName: "Bob" },
-          (joinResponse) => {
-            expect(joinResponse.success).toBe(true);
-            done();
-          }
-        );
-      }
-    );
+      participantSocket.emit('joinSession', { sessionId, displayName: 'Bob' }, (joinResponse) => {
+        expect(joinResponse.success).toBe(true);
+        done();
+      });
+    });
   });
 });
 ```
