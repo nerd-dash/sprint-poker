@@ -325,7 +325,7 @@ Phase 2 is handled by the `/speckit.tasks` command (not part of `/speckit.plan`)
 
 - Frontend: Angular (latest), NGRX SignalStore, Socket.IO client
 - Backend: Node.js 20+ (SSR server), Socket.IO server, Express
-- Testing: Jasmine/Karma, Playwright, socket.io-mock
+- Testing: Vitest, Playwright, socket.io-mock
 - Styling: Angular Material, SCSS
 
 **Architecture**: Single unified project - Angular SSR server extended with Socket.IO for WebSocket handling. No separate backend or database. All session state in-memory on Node.js process.

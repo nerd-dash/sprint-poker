@@ -1,6 +1,6 @@
-# Requirements Checklist: Planning Poker Session Application
+# Requirements Checklist (Annotated): Planning Poker Session Application
 
-Purpose: Unit-tests-for-English checklist validating the quality of requirements in `specs/001-poker-session-app`.
+Purpose: Annotated checklist with exact spec/plan line references for reviewer use.
 
 Created: 2025-12-31
 

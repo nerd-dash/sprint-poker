@@ -240,7 +240,7 @@ As a system operator (automated), I need to automatically clean up inactive sess
 - **SC-007**: Application functions correctly on mobile devices with screen widths down to 320px
 - **SC-008**: Zero user data persisted to storage (verifiable through code review and monitoring)
 - **SC-009**: Inactive sessions are cleaned up within 1 hour, preventing memory leaks
-- **SC-010**: 90% of users complete a full estimation round (create/join → vote → reveal → clear) without errors on first attempt
+- **SC-010**: A full estimation round (create/join → vote → reveal → clear) can be completed without errors in under 2 minutes by a new user (verifiable via E2E and manual QA)
 
 ## Assumptions
 

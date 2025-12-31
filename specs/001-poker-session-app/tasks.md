@@ -51,6 +51,7 @@
 - [ ] T018 Wire Socket.IO into the SSR server without logging session metadata (src/server.ts)
 - [ ] T019 Implement Socket.IO handler module with typed payloads per contracts/websocket-events.md (src/server/websocket/socket-handler.ts)
 - [ ] T020 Implement session cleanup job (runs every 5 minutes, expires after 1h inactivity) (src/server/utils/session-cleanup.ts)
+- [ ] T020a [P] Implement global session limit (100 concurrent sessions) in session store (src/server/websocket/session-store.ts)
 
 - [ ] T021 Implement client WebSocket service (browser-only, typed emits/acks) (src/app/core/services/websocket.service.ts)
 - [ ] T022 Implement client session storage service (sessionId, displayName, participantId, isFacilitator) (src/app/core/services/session-storage.service.ts)
@@ -267,6 +268,7 @@
 - [ ] T092 [P] Add capacity (20) and facilitator-absent messaging per edge cases (src/app/features/session/session.component.ts)
 - [ ] T093 [P] Update README scripts section to match package.json (README.md)
 - [ ] T094 [P] Update quickstart to remove any session-metadata logging examples and match current scripts/paths (specs/001-poker-session-app/quickstart.md, specs/001-poker-session-app/contracts/websocket-events.md)
+- [ ] T095 [P] Verify 100ms visual feedback requirement (SC-006) via performance profiling or manual QA
 
 ---
 
