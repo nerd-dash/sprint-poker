@@ -8,7 +8,7 @@
         "project": ["tsconfig.json", "tsconfig.app.json", "tsconfig.spec.json"],
         "sourceType": "module"
       },
-      "plugins": ["@typescript-eslint", "@angular-eslint"],
+      "plugins": ["@typescript-eslint", "@angular-eslint", "boundaries"],
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -16,6 +16,42 @@
         "plugin:@angular-eslint/recommended"
       ],
       "processor": "@angular-eslint/template/extract-inline-html",
+      "settings": {
+        "boundaries/elements": [
+          {
+            "type": "models",
+            "pattern": "src/models/**/*"
+          },
+          {
+            "type": "utils",
+            "pattern": "src/utils/**/*"
+          },
+          {
+            "type": "app/shared",
+            "pattern": "src/app/shared/**/*"
+          },
+          {
+            "type": "app/core",
+            "pattern": "src/app/core/**/*"
+          },
+          {
+            "type": "app/features",
+            "pattern": "src/app/features/**/*"
+          },
+          {
+            "type": "server/shared",
+            "pattern": "src/server/shared/**/*"
+          },
+          {
+            "type": "server/core",
+            "pattern": "src/server/core/**/*"
+          },
+          {
+            "type": "server/features",
+            "pattern": "src/server/features/**/*"
+          }
+        ]
+      },
       "rules": {
         "complexity": ["error", 5],
         "@angular-eslint/directive-selector": [
@@ -32,6 +68,46 @@
             "type": "element",
             "prefix": "app",
             "style": "kebab-case"
+          }
+        ],
+        "boundaries/element-types": [
+          "error",
+          {
+            "default": "disallow",
+            "rules": [
+              {
+                "from": ["models"],
+                "allow": ["models"]
+              },
+              {
+                "from": ["utils"],
+                "allow": ["utils", "models"]
+              },
+              {
+                "from": ["app/shared"],
+                "allow": ["app/shared", "utils", "models"]
+              },
+              {
+                "from": ["app/core"],
+                "allow": ["app/core", "app/shared", "utils", "models"]
+              },
+              {
+                "from": ["app/features"],
+                "allow": ["app/features", "app/core", "app/shared", "utils", "models"]
+              },
+              {
+                "from": ["server/shared"],
+                "allow": ["server/shared", "utils", "models"]
+              },
+              {
+                "from": ["server/core"],
+                "allow": ["server/core", "server/shared", "utils", "models"]
+              },
+              {
+                "from": ["server/features"],
+                "allow": ["server/features", "server/core", "server/shared", "utils", "models"]
+              }
+            ]
           }
         ]
       }

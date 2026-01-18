@@ -1,5 +1,21 @@
-
 You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
+
+## Architecture Overview
+
+This is a real-time Planning Poker application with **unified frontend/backend** architecture:
+
+- **Angular 21 SSR** application (single project, not separate frontend/backend)
+- **Socket.IO WebSocket** integration on SSR server ([src/server.ts](src/server.ts))
+- **In-memory only** storage (no database, no persistence) - privacy by design
+- **NGRX SignalStore** for client state management ([src/app/features/session/session.store.ts](src/app/features/session/session.store.ts))
+
+Key files:
+
+- [src/server.ts](src/server.ts): Express + Socket.IO server setup with Angular SSR
+- [src/server/websocket/socket-handler.ts](src/server/websocket/socket-handler.ts): WebSocket event handlers
+- [src/server/websocket/session-store.ts](src/server/websocket/session-store.ts): In-memory session state (Map-based)
+- [src/app/core/services/websocket.service.ts](src/app/core/services/websocket.service.ts): Client WebSocket wrapper
+- [specs/001-poker-session-app/contracts/websocket-events.md](specs/001-poker-session-app/contracts/websocket-events.md): WebSocket API contract
 
 ## TypeScript Best Practices
 
@@ -36,10 +52,12 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ## State Management
 
+- Use **NGRX SignalStore** (`signalStore`, `withState`, `withMethods`, `patchState`) for feature stores
 - Use signals for local component state
 - Use `computed()` for derived state
 - Keep state transformations pure and predictable
 - Do NOT use `mutate` on signals, use `update` or `set` instead
+- Example pattern: [src/app/features/session/session.store.ts](src/app/features/session/session.store.ts)
 
 ## Templates
 
@@ -54,3 +72,49 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+
+## WebSocket Patterns
+
+- Client: Use [WebSocketService](src/app/core/services/websocket.service.ts) wrapper around socket.io-client
+- Server: Handlers in [socket-handler.ts](src/server/websocket/socket-handler.ts) emit to rooms and use acknowledgments
+- All WebSocket events defined in [websocket-events.md](specs/001-poker-session-app/contracts/websocket-events.md)
+- Server-side session state in `sessionStore` (Map-based, in-memory only)
+- Use `socket.join(sessionId)` for room-based broadcasting
+- Always use acknowledgment callbacks for client→server events
+
+## Validation & Sanitization
+
+- Domain validators in [src/app/domain/validators/session-validators.ts](src/app/domain/validators/session-validators.ts)
+- Sanitization utilities in [src/app/shared/utils/sanitization.utils.ts](src/app/shared/utils/sanitization.utils.ts)
+- Always validate on **both** client and server
+- Allowed votes: Fibonacci sequence `[0, 1, 2, 3, 5, 8, 13, 21]`
+
+## Testing
+
+- **Unit tests**: Angular test runner (Vitest-backed) - run with `npm test` (do NOT use watch mode)
+- **Integration tests**: Vitest + real Socket.IO server in [tests/integration/](tests/integration/)
+- **E2E tests**: Playwright (Chrome-only) in [tests/e2e/](tests/e2e/)
+- TDD mandatory: Write tests before implementation
+- Max cyclomatic complexity: 5 per function
+
+## Privacy Guardrails (NON-NEGOTIABLE)
+
+- **Zero persistence**: No database, no file writes, no logs containing user data
+- Do NOT log: socket IDs, session IDs, display names, votes, or any identifiable data
+- Session data exists only in `sessionStore` Map (cleared on timeout/disconnect)
+- Comment violations with `// Privacy guardrail: ...`
+
+## Performance Requirements
+
+- Initial page load < 2s on 3G
+- WebSocket latency < 500ms
+- Client bundle < 500KB gzipped
+- Support 20 concurrent participants per session
+
+## Development Workflow
+
+- Run dev server: `npm start` (Angular SSR + Socket.IO on port 4200)
+- Build: `npm run build` (outputs to `dist/sprint-poker-app/`)
+- E2E: `npm run e2e`
+- All specs/plans in [specs/001-poker-session-app/](specs/001-poker-session-app/)
+- Feature branches: `001-poker-session-app` or similar numbered format

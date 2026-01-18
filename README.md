@@ -72,7 +72,7 @@ npm run build
 - **Frontend**: Angular 21 (latest) with SSR, TypeScript, Angular Material
 - **Backend**: Node.js with Express + Socket.IO (unified SSR server)
 - **State Management**: NGRX SignalStore (modern Angular signals)
-- **Testing**: Angular test runner (Vitest-backed) for unit tests, Playwright (Chrome-only) for E2E
+- **Testing**: Angular Testing Library for components, Vitest for unit tests, Playwright (Chrome-only) for E2E
 - **Styling**: SCSS with custom design system
 
 ### Project Structure
@@ -104,9 +104,11 @@ npm run e2e
 
 ### Test Coverage
 
-- Unit tests: 80%+ coverage required
-- Integration tests for WebSocket flows
-- E2E tests for critical user journeys
+- **Component Tests**: Angular Testing Library for isolated component testing
+- **Unit Tests**: Vitest for services, utilities, and pure functions
+- **Integration Tests**: Socket.IO server integration tests
+- **E2E Tests**: Playwright (Chrome) for critical user journeys
+- **Coverage Target**: 80%+ overall coverage required
 
 ## 📋 Development Workflow
 
