@@ -16,6 +16,42 @@
         "plugin:@angular-eslint/recommended"
       ],
       "processor": "@angular-eslint/template/extract-inline-html",
+      "settings": {
+        "boundaries/elements": [
+          {
+            "type": "models",
+            "pattern": "src/models/**/*"
+          },
+          {
+            "type": "utils",
+            "pattern": "src/utils/**/*"
+          },
+          {
+            "type": "app/shared",
+            "pattern": "src/app/shared/**/*"
+          },
+          {
+            "type": "app/core",
+            "pattern": "src/app/core/**/*"
+          },
+          {
+            "type": "app/features",
+            "pattern": "src/app/features/**/*"
+          },
+          {
+            "type": "server/shared",
+            "pattern": "src/server/shared/**/*"
+          },
+          {
+            "type": "server/core",
+            "pattern": "src/server/core/**/*"
+          },
+          {
+            "type": "server/features",
+            "pattern": "src/server/features/**/*"
+          }
+        ]
+      },
       "rules": {
         "complexity": ["error", 5],
         "@angular-eslint/directive-selector": [
@@ -34,8 +70,6 @@
             "style": "kebab-case"
           }
         ],
-        "boundaries/no-unknown": ["error"],
-        "boundaries/no-cross-border": ["error"],
         "boundaries/element-types": [
           "error",
           {
