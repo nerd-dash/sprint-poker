@@ -8,7 +8,7 @@
         "project": ["tsconfig.json", "tsconfig.app.json", "tsconfig.spec.json"],
         "sourceType": "module"
       },
-      "plugins": ["@typescript-eslint", "@angular-eslint"],
+      "plugins": ["@typescript-eslint", "@angular-eslint", "boundaries"],
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -32,6 +32,48 @@
             "type": "element",
             "prefix": "app",
             "style": "kebab-case"
+          }
+        ],
+        "boundaries/no-unknown": ["error"],
+        "boundaries/no-cross-border": ["error"],
+        "boundaries/element-types": [
+          "error",
+          {
+            "default": "disallow",
+            "rules": [
+              {
+                "from": ["models"],
+                "allow": ["models"]
+              },
+              {
+                "from": ["utils"],
+                "allow": ["utils", "models"]
+              },
+              {
+                "from": ["app/shared"],
+                "allow": ["app/shared", "utils", "models"]
+              },
+              {
+                "from": ["app/core"],
+                "allow": ["app/core", "app/shared", "utils", "models"]
+              },
+              {
+                "from": ["app/features"],
+                "allow": ["app/features", "app/core", "app/shared", "utils", "models"]
+              },
+              {
+                "from": ["server/shared"],
+                "allow": ["server/shared", "utils", "models"]
+              },
+              {
+                "from": ["server/core"],
+                "allow": ["server/core", "server/shared", "utils", "models"]
+              },
+              {
+                "from": ["server/features"],
+                "allow": ["server/features", "server/core", "server/shared", "utils", "models"]
+              }
+            ]
           }
         ]
       }
